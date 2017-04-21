@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>常用焦点图</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/swiper.css">
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    
+    .pc-slide {
+        width: 500px;
+        margin: 0 auto;
+    }
+    
+    .view .swiper-container {
+        width: 500px;
+        height: 550px;
+    }
+    
+    .view .arrow-left {
+        background: url(images/index_tab_l.png) no-repeat left top;
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        margin-top: -25px;
+        width: 28px;
+        height: 51px;
+        z-index: 10;
+    }
+    
+    .view .arrow-right {
+        background: url(images/index_tab_r.png) no-repeat left bottom;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        margin-top: -25px;
+        width: 28px;
+        height: 51px;
+        z-index: 10;
+    }
+    
+    .preview {
+        width: 100%;
+        margin-top: 10px;
+        position: relative;
+    }
+    
+    .preview .swiper-container {
+        width: 430px;
+        height: 82px;
+        margin-left: 35px;
+    }
+    
+    .preview .swiper-slide {
+        width: 87px;
+        height: 82px;
+    }
+    
+    .preview .slide6 {
+        width: 82px;
+    }
+    
+    .preview .arrow-left {
+        background: url(images/feel3.png) no-repeat left top;
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        margin-top: -9px;
+        width: 9px;
+        height: 18px;
+        z-index: 10;
+    }
+    
+    .preview .arrow-right {
+        background: url(images/feel4.png) no-repeat left bottom;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        margin-top: -9px;
+        width: 9px;
+        height: 18px;
+        z-index: 10;
+    }
+    
+    .preview img {
+        width: 82px;
+        height: 82px;
+        padding: 1px;
+    }
+    
+    .preview .active-nav img {
+        padding: 0;
+        border: 1px solid #F00;
+    }
+    
+    .bimg .b-swiper img {
+        width: 500px;
+        height: 500px;
+    }
+    
+    .bimg .b-swiper span {
+        margin-left: 25px;
+    }
+    
+    .bimg .b-swiper span a {
+        text-decoration: none;
+    }
+    </style>
+</head>
+
+<body>
+    <button type="button" id="btn">点击出来图片</button>
+    <div class="pc-slide" style="display: none;">
+        <div class="view">
+            <div class="swiper-container arr">
+                <a class="arrow-left" href="#"></a>
+                <a class="arrow-right" href="#"></a>
+                <div class="swiper-wrapper bimg">
+                </div>
+            </div>
+            <!-- <p>hello world</p> -->
+        </div>
+        <div class="preview arr">
+            <a class="arrow-left" href="#"></a>
+            <a class="arrow-right" href="#"></a>
+            <div class="swiper-container">
+                <div class="swiper-wrapper simg">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/swiper.min.js"></script>
+<script>
+$(document).ready(function($) {
+    $('#btn').click(function(event) {
+        $('.pc-slide').show();
+        $.get('../img.json', function(data) {
+            // console.log(data);
+            for (var i = 0; i <= data.length - 1; i++) {
+                $('.bimg').append("<div class='swiper-slide b-swiper'><a target='_blank'><img src=" + data[i].bimgs + " alt=''></a><p><span>" + data[i].title + "</span><span><a href='#'>下载</a></span><span>" + data[i].size + "</span><span><a target='_blank' href='" + data[i].HTML5 + "'> HTML5</a></span><span><a target='_blank' href='" + data[i].FLASH + "'>FLASH </a></span></p></div>");
+                $('.simg').append("<div class='swiper-slide'><a target='_blank'><img src=" + data[i].bimgs + " alt=''></a><p></p></div>");
+            }
+            $('.simg div:first').addClass('swiper-slide-visible active-nav');
+
+            // });
+            var previewSwiper = new Swiper('.preview .swiper-container', {
+                visibilityFullFit: true,
+                preloadImages: true,
+                updateOnImagesReady: true,
+                slidesPerView: 'auto',
+                onlyExternal: true,
+                onSlideClick: function() {
+                    viewSwiper.swipeTo(previewSwiper.clickedSlideIndex);
+                }
+            })
+
+            function updateNavPosition() {
+                $('.preview .active-nav').removeClass('active-nav');
+                var activeNav = $('.preview .swiper-slide').eq(viewSwiper.activeIndex).addClass('active-nav');
+                if (!activeNav.hasClass('swiper-slide-visible')) {
+                    if (activeNav.index() > previewSwiper.activeIndex) {
+                        var thumbsPerNav = Math.floor(previewSwiper.width / activeNav.width()) - 1;
+                        previewSwiper.swipeTo(activeNav.index() - thumbsPerNav);
+                    } else {
+                        previewSwiper.swipeTo(activeNav.index());
+                    }
+                }
+            }
+
+            var viewSwiper = new Swiper('.view .swiper-container', {
+                preloadImages: true,
+                updateOnImagesReady: true,
+                onSlideChangeStart: function() {
+                    updateNavPosition();
+                }
+            })
+
+            $('.view .arrow-left,.preview .arrow-left').on('click', function(e) {
+                e.preventDefault();
+                if (viewSwiper.activeIndex == 0) {
+                    viewSwiper.swipeTo(viewSwiper.slides.length - 1, 1000);
+                    return;
+                }
+                viewSwiper.swipePrev();
+            })
+            $('.view .arrow-right,.preview .arrow-right').on('click', function(e) {
+                e.preventDefault();
+                if (viewSwiper.activeIndex == viewSwiper.slides.length - 1) {
+                    viewSwiper.swipeTo(0, 1000);
+                    return
+                }
+                viewSwiper.swipeNext();
+            });
+        });
+    });
+});
+</script>
+
+</html>
