@@ -1,0 +1,44 @@
+[{
+    "bimgs": "CSY00588-0001/CSY00588-0001_001.jpg",
+    "title": "文件名是:b1.jpg",
+    "onload": "下载",
+    "size": "100kb",
+    "HTML5": "CSY00588-0001/H5/CSY00588-0001.html",
+    "FLASH": "CSY00588-0001/flash/CSY00588-0001.swf"
+
+}, {
+    "bimgs": "CSY00588-0001/CSY00588-0001_002.jpg",
+    "title": "文件名是:b2.jpg",
+    "onload": "下载",
+    "size": "100kb",
+    "HTML5": "CSY00588-0001/H5/CSY00588-0001.html",
+    "FLASH": "CSY00588-0001/flash/CSY00588-0001.swf"
+}, {
+    "bimgs": "CSY00588-0001/CSY00588-0001_003.jpg",
+    "title": "文件名是:b3.jpg",
+    "onload": "下载",
+    "size": "100kb",
+    "HTML5": "CSY00588-0001/H5/CSY00588-0001.html",
+    "FLASH": "CSY00588-0001/flash/CSY00588-0001.swf"
+}, {
+    "bimgs": "CSY00588-0001/CSY00588-0001_004.jpg",
+    "title": "文件名是:b4.jpg",
+    "onload": "下载",
+    "size": "100kb",
+    "HTML5": "CSY00588-0001/H5/CSY00588-0001.html",
+    "FLASH": "CSY00588-0001/flash/CSY00588-0001.swf"
+}, {
+    "bimgs": "CSY00588-0001/CSY00588-0001_006.jpg",
+    "title": "文件名是:b5.jpg",
+    "onload": "下载",
+    "size": "100kb",
+    "HTML5": "CSY00588-0001/H5/CSY00588-0001.html",
+    "FLASH": "CSY00588-0001/flash/CSY00588-0001.swf"
+}, {
+    "bimgs": "CSY00588-0001/CSY00588-0001_007.jpg",
+    "title": "文件名是:b6.jpg",
+    "onload": "下载",
+    "size": "100kb",
+    "HTML5": "CSY00588-0001/H5/CSY00588-0001.htmlHTML5",
+    "FLASH": "CSY00588-0001/flash/CSY00588-0001.swf"
+}]

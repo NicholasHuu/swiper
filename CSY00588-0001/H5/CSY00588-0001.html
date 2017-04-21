@@ -1,0 +1,254 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0021)http://www.winbiz.cn/ -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable = no'/>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>3D展示by盈商科技</title>
+<link rel="stylesheet" type="text/css" href="Res/css/reset.css"/>
+<link rel="stylesheet" type="text/css" href="Res/css/threesixty.css"/>
+<style type="text/css">
+html{ height:100%;}
+body{ height:100%;}
+#wap{  position:relative;}
+#wapin{ overflow:hidden; height:100%;}
+.show{ position:absolute; left:50%; top:50%; -webkit-transform: translate(-50%,-50%);width:50px; height:50px; text-align:center; margin:auto;}
+.toolbar{display: -webkit-box; height:40px; width:100%; position:absolute; bottom:50px; left:0; text-align:center; }
+.toolbar .btn{-webkit-tap-highlight-color:rgba(201, 224, 253, 0); width:40px; height:40px; -webkit-box-flex: 1; }
+.toolbar .btn.play{background:url(Res/Pic/2.png) no-repeat center center; background-size:40px 40px;}
+.toolbar .btn.pause{background:url(Res/Pic/1.png) no-repeat center center; background-size:40px 40px;}
+.toolbar .btn.turnl{background:url(Res/Pic/3.png) no-repeat center center; background-size:40px 40px;}
+.toolbar .btn.turnr{background:url(Res/Pic/4.png) no-repeat center center; background-size:40px 40px;}
+.toolbar .btn.smewm{background:url(Res/Pic/qrcode.png) no-repeat center center; background-size:40px 40px;}
+.gjt,#speedAdjust{ display:none; position:relative; z-index:11;}
+.sy{ position:absolute; left:auto; top:auto; margin:auto; z-index:999; width:auto;}
+#threesixty .sy img{ position:static; width:100%;}
+.erwm{ display:none; width:100%; height:100%; background:#000; opacity:0.5; z-index:10; position:fixed;}
+#erwmimg{ width:200px; height:200px;position:fixed; top:50%; left:50%; margin-left:-100px; margin-top:-100px; z-index:11; display:none;}
+#erwmimg img{ display:block; width:100%;}
+#erwmimg0{ width:200px; height:200px;position:fixed; top:50%; left:50%; margin-left:-100px; margin-top:-100px; z-index:11; display:none;}
+#erwmimg0 img{ display:block; width:100%;}
+</style>
+
+<script type="text/javascript">
+document.write("<scr"+"ipt src=\"Config.js\"></sc"+"ript>");
+document.write("<scr"+"ipt src=\"Res/Js/heartcode-canvasloader-min.js\"></sc"+"ript>");
+document.write("<scr"+"ipt src=\"Res/Js/jquery.js\"></sc"+"ript>");
+document.write("<scr"+"ipt src=\"Res/Js/jquery-1.7.2.min.js\"></sc"+"ript>");
+document.write("<scr"+"ipt src=\"Res/Js/GlobalZoom.js\"></sc"+"ript>");
+document.write("<scr"+"ipt src=\"Res/Js/mousewheel.js\"></sc"+"ript>");
+document.write("<scr"+"ipt src=\"Res/Js/threesixty.min.js\"></sc"+"ript>");
+document.write("<scr"+"ipt src=\"Res/Js/pinchzoom.min.js\"></sc"+"ript>");
+document.write("<scr"+"ipt src=\"Res/Js/slip.js\"></sc"+"ript>");
+</script>
+
+
+<script type="text/javascript">
+	$(function(){
+		var rounding1,rounding2,test=333;
+		var isplay=false;
+		var toolbardis;
+		var turnd=true;
+	$("#web").hover(function(){$(".gjt,#speedAdjust").show();},function(){$(".gjt,#speedAdjust").hide();});   
+	
+	 $(".sy img").attr("src",Config.watermask.src);
+	
+	 if(Config.loop)
+	 	  {$("#toggle").addClass("clk");
+		clearInterval(rounding1);
+		clearInterval(rounding2);
+		isplay=true;
+				$("#toggle").removeClass("play").addClass("pause");
+				trr();
+		}   
+	   	
+	$("#threesixty").bind("touchstart",function(){
+		clearTimeout(toolbardis);
+		$(".toolbar").show();
+	});
+
+	$("#threesixty").bind("touchend",function(){
+		
+		toolbardis=setTimeout(function(){$(".toolbar").hide()},4000);
+	});	
+		
+	$("#toggle").bind("touchstart",function(e){
+		e.stopPropagation();
+		$(this).addClass("clk");
+		clearInterval(rounding1);
+		clearInterval(rounding2);
+		if($(this).hasClass("play"))
+			{
+				isplay=true;
+				$(this).removeClass("play").addClass("pause");
+				if($("#turnl").hasClass("turnl")) trr();
+				else tlr();
+			}
+		else
+			{isplay=false;$(this).removeClass("pause").addClass("play");}
+	});
+
+	$("#turnl").bind("touchstart",function(e){
+		e.stopPropagation();
+		//$("#toggle").trigger("touchstart");
+		$(this).addClass("clk2");
+		isplay=true;
+		$("#toggle").removeClass("play").addClass("pause");
+		turnd=!turnd;
+		if(turnd)
+			{$(this).removeClass("turnr").addClass("turnl");trr();}
+		else
+			{$(this).removeClass("turnl").addClass("turnr");tlr();}
+	});
+	
+	$(".smewm").bind("touchstart",function(e){
+		e.stopPropagation();
+		$(".erwm").show();
+		$("#erwmimg").show();
+		$("#erwmimg0").show();
+		
+	});
+	
+	$(".erwm").bind("touchstart",function(e){
+		e.stopPropagation();
+		$(".erwm").hide();
+		$("#erwmimg").hide();
+		$("#erwmimg0").hide();
+	});
+	
+	function tlr(){
+		clearInterval(rounding2);clearInterval(rounding1);
+		rounding1=setInterval(function(){
+		nowimg=$("ol li img").index($(".current-image"));
+	    nowimg--;//if(nowimg>UIMIX.fullview.data.totalFrames-1){nowimg=0;}
+		if(nowimg<0)nowimg=UIMIX.fullview.data.totalFrames-1;
+		$("ol li img").removeClass("current-image").addClass("previous-image").eq(nowimg).addClass("current-image").removeClass("previous-image");				
+	},Config.speed);	
+	}
+	
+	function trr(){
+		clearInterval(rounding1);clearInterval(rounding2);
+		rounding2=setInterval(function(){
+		nowimg=$("ol li img").index($(".current-image"));
+	    nowimg++;if(nowimg>UIMIX.fullview.data.totalFrames-1){nowimg=0;}
+		$("ol li img").removeClass("current-image").addClass("previous-image").eq(nowimg).addClass("current-image").removeClass("previous-image");				
+	},Config.speed);	
+	}
+	
+});
+		
+</script>
+<script type="text/javascript">
+$(function(){
+	if(/AppleWebKit.*mobile/i.test(navigator.userAgent) || (/MIDP|SymbianOS|NOKIA|SAMSUNG|LG|NEC|TCL|Alcatel|BIRD|DBTEL|Dopod|PHILIPS|HAIER|LENOVO|MOT-|Nokia|SonyEricsson|SIE-|Amoi|ZTE/.test(navigator.userAgent))){
+    if(window.location.href.indexOf("?mobile")<0){
+        try{
+            if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)){
+               {$("#web").remove();$("#speedAdjust").remove();}
+            }else if(/iPad/i.test(navigator.userAgent)){
+               {$("#web").remove();$("#speedAdjust").remove();}
+            }else{
+               {$("#web").remove();$("#speedAdjust").remove();}
+            }
+        }catch(e){}
+    }
+	
+}else
+		{$("body").css("overflow","visible");
+		Player.BuilderPlayerTheme();
+        Player.preLoadImage();$("#wap").remove();
+			$(window).resize(function(){
+				if($(window).width()<500)
+					$("html").css("zoom",$(window).width()/500);
+				else
+					$("html").css("zoom",1);	
+			});
+			$(window).resize();
+		}
+})
+
+</script>
+<script type="text/javascript">
+	$(function(){
+		$('#Stage').bind('mousewheel', function(event, delta, deltaX, deltaY) {
+    	if(delta>0)
+			{
+				Player.ZoomOutOrIn(1);		
+			}			
+		else
+			{
+				Player.ZoomOutOrIn(-1);	
+			}
+});
+
+	$(window).resize(function(){
+		  Player.OrientChange();
+	});
+	});
+</script>
+ <script type="text/javascript">
+        $(function () {
+            $('div.pinch-zoom').each(function () {
+                new RTP.PinchZoom($(this), {});
+            });
+        })
+    </script>
+
+</head>
+<body>
+<div style="display:none;" ><img src="Res/Small/0.jpg" /></div>
+<div id="web"> 	
+  <div id="Stage" style="position:absolute;top:0px;left:0px;cursor:url(Res/Pic/Move.cur),auto;">
+        <img id="aa" style="cursor:url(Res/Pic/Move.cur),auto; position:absolute;" />
+    <div style="position:absolute;top:0px;left:0px; z-index:4;_top:expression(documentElement.scrollTop+10)" id="tip" >
+    </div>
+    <div id="load" style="position:absolute;z-index:5">
+        <img src="Res/Pic/PicLoading.gif" />
+    </div>
+    </div>
+	<div class="gjt"></div>
+    <div class="erwm"></div>
+    <div id="erwmimg"></div>
+</div>     
+<div id="wap">
+<div class="erwm"></div>
+
+<div id="erwmimg0">
+	
+</div> 
+<script type="text/javascript"> 
+    document.getElementById("erwmimg").innerHTML = "<img src='http://qr.liantu.com/api.php?&w=500&m=30&text="+window.location.href+"'/>" 
+    document.getElementById("erwmimg0").innerHTML = "<img src='http://qr.liantu.com/api.php?&w=500&m=30&text="+window.location.href+"'/>"
+    </script>   
+<div id="container">
+ <div class="page page-1" style="position:relative">
+ 	<div id="wapin" >
+		<div class="pinch-zoom">
+            <div id="threesixty" image_count='60' end_frame='120' path_pattern='Res/Big/#index#.jpg' scale='1.5' fix_width='999' fix_height='1500' max_width='999' max_height='1500' > 
+              <div class="sy"><img src="" alt="" /></div>
+              <ol>
+              </ol>
+          
+            </div>
+		</div>
+        <div class="show">
+            <img src="Res/Pic/Loading.gif" width="50" height="50">
+            <em class="loading">
+              <p>0%</p>
+            </em>
+            </div>
+		<div class="toolbar xs">
+            <div id="turnl" class="btn turnl"></div>
+            <div id="toggle" class="btn play"></div>
+            <div id="smewm" class="btn smewm"></div>
+		</div>
+        
+	</div>
+ </div>
+
+</div>
+
+</div>
+</body>
+</html>
